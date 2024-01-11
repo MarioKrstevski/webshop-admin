@@ -18,9 +18,10 @@ export async function POST(
   req: Request,
   { params }: { params: { storeId: string } }
 ) {
-  const { productIds } = await req.json();
-  const { userId } = auth();
+  const { productIds, redirectUrl } = await req.json();
 
+  // Get the route from where the user comes from, with window.location.href in the frontend so that we can redirect the user back to the cart page after the payment is completed.
+  // this will be used in the success_url and cancel_url below
   if (productIds.length === 0) {
     return new NextResponse("Missing productIds, it's required", {
       status: 400,
@@ -70,8 +71,10 @@ export async function POST(
     phone_number_collection: {
       enabled: true,
     },
-    success_url: `${process.env.FRONTEND_STORE_URL}/cart?success=1`,
-    cancel_url: `${process.env.FRONTEND_STORE_URL}/cart?canceled=1`,
+    // success_url: `${process.env.FRONTEND_STORE_URL}/cart?success=1`,
+    // cancel_url: `${process.env.FRONTEND_STORE_URL}/cart?canceled=1`,
+    success_url: `${redirectUrl}/cart?success=1`,
+    cancel_url: `${redirectUrl}/cart?canceled=1`,
     metadata: {
       orderId: order.id,
     },
