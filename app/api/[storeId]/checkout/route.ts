@@ -20,6 +20,7 @@ export async function POST(
 ) {
   const { productIds, redirectUrl } = await req.json();
 
+  console.log("redirectUrl", redirectUrl);
   // Get the route from where the user comes from, with window.location.href in the frontend so that we can redirect the user back to the cart page after the payment is completed.
   // this will be used in the success_url and cancel_url below
   if (productIds.length === 0) {
